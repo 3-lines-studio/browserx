@@ -39,24 +39,29 @@ type browserTarget struct {
 }
 
 func main() {
-	if len(os.Args) == 2 && os.Args[1] == "ax-tools" {
+	args := os.Args[1:]
+	if len(args) > 0 && args[0] == "--" {
+		args = args[1:]
+	}
+	if len(args) == 1 && args[0] == "ax-tools" {
 		printTools()
 		return
 	}
-	if len(os.Args) != 3 || os.Args[1] != "ax-run" {
+	if len(args) != 2 || args[0] != "ax-run" {
 		fail(2, "usage: browserx ax-tools | browserx ax-run TOOL")
 	}
 	var input arguments
 	if err := json.NewDecoder(io.LimitReader(os.Stdin, 1<<20)).Decode(&input); err != nil {
 		fail(2, "invalid arguments: "+err.Error())
 	}
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 	ctx, err := browserContext(ctx)
 	if err != nil {
 		fail(1, err.Error())
 	}
 	var result string
-	switch os.Args[2] {
+	switch args[1] {
 	case "browser_open":
 		result, err = openPage(ctx, input.URL)
 	case "browser_read":
@@ -66,7 +71,7 @@ func main() {
 	case "browser_screenshot":
 		result, err = screenshot(ctx, input.Name)
 	default:
-		fail(2, "unknown tool: "+os.Args[2])
+		fail(2, "unknown tool: "+args[1])
 	}
 	if err != nil {
 		fail(1, err.Error())
