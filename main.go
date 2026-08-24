@@ -43,12 +43,12 @@ func main() {
 	if len(args) > 0 && args[0] == "--" {
 		args = args[1:]
 	}
-	if len(args) == 1 && args[0] == "ax-tools" {
+	if len(args) == 1 && args[0] == "describe" {
 		printTools()
 		return
 	}
-	if len(args) != 2 || args[0] != "ax-run" {
-		fail(2, "usage: browserx ax-tools | browserx ax-run TOOL")
+	if len(args) != 2 || args[0] != "run" {
+		fail(2, "usage: browserx describe | browserx run TOOL")
 	}
 	var input arguments
 	if err := json.NewDecoder(io.LimitReader(os.Stdin, 1<<20)).Decode(&input); err != nil {

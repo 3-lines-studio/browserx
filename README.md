@@ -22,11 +22,11 @@ Override the CDP endpoint with `BROWSERX_CDP_URL`.
 ## Protocol
 
 ```sh
-browserx ax-tools
-printf '{"url":"https://example.com"}' | browserx ax-run browser_open
-printf '{}' | browserx ax-run browser_read
-printf '{}' | browserx ax-run browser_links
-printf '{"name":"example"}' | browserx ax-run browser_screenshot
+browserx describe
+printf '{"url":"https://example.com"}' | browserx run browser_open
+printf '{}' | browserx run browser_read
+printf '{}' | browserx run browser_links
+printf '{"name":"example"}' | browserx run browser_screenshot
 ```
 
 Browserx only opens HTTP and HTTPS URLs, reads the current page, lists links, and saves screenshots.
