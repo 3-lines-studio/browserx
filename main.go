@@ -50,6 +50,15 @@ func main() {
 	if len(args) != 2 || args[0] != "run" {
 		fail(2, "usage: browserx describe | browserx run TOOL")
 	}
+	tools := map[string]struct{}{
+		"browser_open":       {},
+		"browser_read":       {},
+		"browser_links":      {},
+		"browser_screenshot": {},
+	}
+	if _, ok := tools[args[1]]; !ok {
+		fail(2, "unknown tool: "+args[1])
+	}
 	var input arguments
 	if err := json.NewDecoder(io.LimitReader(os.Stdin, 1<<20)).Decode(&input); err != nil {
 		fail(2, "invalid arguments: "+err.Error())
@@ -70,8 +79,6 @@ func main() {
 		result, err = readLinks(ctx)
 	case "browser_screenshot":
 		result, err = screenshot(ctx, input.Name)
-	default:
-		fail(2, "unknown tool: "+args[1])
 	}
 	if err != nil {
 		fail(1, err.Error())
