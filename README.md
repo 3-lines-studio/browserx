@@ -1,5 +1,7 @@
 # browserx
 
+<p align="center"><img src=".github/ax.svg" width="96" height="96" alt="AX ecosystem"></p>
+
 Read-only visible Chromium tool for AX.
 
 ## Configure
@@ -13,7 +15,7 @@ chromium-browser --remote-debugging-address=127.0.0.1 --remote-debugging-port=92
 Set the artifact directory and register Browserx:
 
 ```sh
-export BROWSERX_ARTIFACT_DIR="$HOME/.local/share/botx/artifacts"
+export BROWSERX_ARTIFACT_DIR="$HOME/.local/share/browserx/artifacts"
 export AX_TOOLS=browserx
 ```
 
