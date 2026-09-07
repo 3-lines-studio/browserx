@@ -4,6 +4,12 @@
 
 Read-only visible Chromium tool for AX.
 
+## Install
+
+```sh
+curl -fsSL https://ax.3lines.studio/install.sh | sh -s -- browserx
+```
+
 ## Configure
 
 Start Chromium with a dedicated profile and CDP port:
