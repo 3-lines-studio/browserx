@@ -119,7 +119,7 @@ func currentTarget(ctx context.Context, endpoint string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("list browser pages: %w", err)
 	}
-	defer response.Body.Close()
+	defer func() { _ = response.Body.Close() }()
 	if response.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("list browser pages: %s", response.Status)
 	}

@@ -24,10 +24,10 @@ func captureStdout(t *testing.T, fn func()) string {
 	os.Stdout = writer
 	fn()
 	os.Stdout = old
-	writer.Close()
+	_ = writer.Close()
 	var buf bytes.Buffer
-	io.Copy(&buf, reader)
-	reader.Close()
+	_, _ = io.Copy(&buf, reader)
+	_ = reader.Close()
 	return buf.String()
 }
 
@@ -149,8 +149,8 @@ func TestMainHelper(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	io.WriteString(writer, os.Getenv("TEST_MAIN_STDIN"))
-	writer.Close()
+	_, _ = io.WriteString(writer, os.Getenv("TEST_MAIN_STDIN"))
+	_ = writer.Close()
 	os.Stdin = reader
 	main()
 }
@@ -274,7 +274,7 @@ func TestCurrentTargetSelectsFirstPage(t *testing.T) {
 			t.Errorf("unexpected path %q", r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		io.WriteString(w, `[{"id":"abc","type":"page"},{"id":"def","type":"background"}]`)
+		_, _ = io.WriteString(w, `[{"id":"abc","type":"page"},{"id":"def","type":"background"}]`)
 	}))
 	defer server.Close()
 	id, err := currentTarget(t.Context(), server.URL+"//")
@@ -288,7 +288,7 @@ func TestCurrentTargetSelectsFirstPage(t *testing.T) {
 
 func TestCurrentTargetNoPage(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, `[{"id":"x","type":"background"}]`)
+		_, _ = io.WriteString(w, `[{"id":"x","type":"background"}]`)
 	}))
 	defer server.Close()
 	if _, err := currentTarget(t.Context(), server.URL); err == nil || !strings.Contains(err.Error(), "browser has no open page") {
@@ -298,7 +298,7 @@ func TestCurrentTargetNoPage(t *testing.T) {
 
 func TestCurrentTargetEmptyList(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, `[]`)
+		_, _ = io.WriteString(w, `[]`)
 	}))
 	defer server.Close()
 	if _, err := currentTarget(t.Context(), server.URL); err == nil || !strings.Contains(err.Error(), "browser has no open page") {
@@ -318,7 +318,7 @@ func TestCurrentTargetNon200(t *testing.T) {
 
 func TestCurrentTargetInvalidJSON(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, `not-json`)
+		_, _ = io.WriteString(w, `not-json`)
 	}))
 	defer server.Close()
 	if _, err := currentTarget(t.Context(), server.URL); err == nil || !strings.Contains(err.Error(), "list browser pages") {
